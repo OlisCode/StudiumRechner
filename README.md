@@ -1,0 +1,2 @@
+# StudiumRechner
+Prüfungsaufgabe C/C++
