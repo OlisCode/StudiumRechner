@@ -1,4 +1,4 @@
-#if not defined(__AVR_ATmega32U4__)
+#if not defined(__AVR_ATmega328P__)
 #error "This programm has not been designed for this CPU. Please use a board with a compatible CPU"
 #endif
 
