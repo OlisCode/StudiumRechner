@@ -27,5 +27,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QSerialPort port;
+    qint32 calculate_checksum(QByteArray message);
 };
 #endif // MAINWINDOW_H
