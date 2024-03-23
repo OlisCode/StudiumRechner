@@ -46,10 +46,12 @@ void MainWindow::on_pushButton_Connect_clicked()
 
 void MainWindow::on_pushButton_Calculate_clicked()
 {
-    QString message_str="A"+ui->lineEdit_LeftOperand->text()+"B"+ui->comboBox_operator->currentText()+"C"+ui->lineEdit_RightOperand->text()+"D";
+    QString message_str="AB"+ui->lineEdit_LeftOperand->text()+"C"+ui->comboBox_operator->currentText()+"D"+ui->lineEdit_RightOperand->text()+"E";
     QByteArray message = message_str.toUtf8();
-    qint32 checksum = calculate_checksum(message);
+    message.append(QString("X").toUtf8());
+    message.append(QString::number(7139).toUtf8());
     message.append(QString("Y").toUtf8());
+    qint32 checksum = calculate_checksum(message);
     message.append(QString::number(checksum).toUtf8());
     message.append(QString("Z\n").toUtf8());
     qDebug()<<message;
