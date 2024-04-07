@@ -65,7 +65,7 @@ qint32 MainWindow::calculate_checksum(QByteArray message)
     // int32 is chosen because arduino string to int function returns int32_t.
     // by using the same datatype it is ensured that the comparison will work even when an overflow occurs since
     // this overflow happens on both sides in the same way.
-    qint32 toreturn = 0;
+    quint8 toreturn = 0;
     for(int i=0;i<message.length();i++)
     {
         toreturn += message[i];
