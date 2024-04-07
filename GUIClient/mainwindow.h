@@ -39,5 +39,7 @@ private:
     QTimer *serial_refresh_timer;
     QList<QString> portnames_in_view;
     QString selected_operator;
+    void serialconnect();
+    void serialdisconnect();
 };
 #endif // MAINWINDOW_H

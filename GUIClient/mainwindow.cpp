@@ -45,15 +45,39 @@ void MainWindow::refreshPorts()
 
 void MainWindow::on_pushButton_Connect_clicked()
 {
-    port.setPortName(ui->comboBox_Serial->currentText());
-    port.setBaudRate(115200);
-    port.open(QIODevice::ReadWrite);
-    ui->comboBox_Serial->setDisabled(true);
-    ui->pushButton_Connect->setDisabled(true);
+    if(port.portName()==""){
+        serialconnect();
+    }else{
+        serialdisconnect();
+    }
+}
+
+void MainWindow::serialconnect()
+{
+    if(port.portName()==""){
+        port.setPortName(ui->comboBox_Serial->currentText());
+        port.setBaudRate(115200);
+        port.open(QIODevice::ReadWrite);
+        ui->comboBox_Serial->setDisabled(true);
+        serial_refresh_timer->stop();
+        ui->pushButton_Calculate->setDisabled(false);
+        ui->pushButton_Calculate->setToolTip(QString(""));
+        ui->label_Status->setText(QString("Connected"));//TODO Use language file
+        ui->pushButton_Connect->setText("Disconnect");//TODO Use language file
+    }
+}
+
+void MainWindow::serialdisconnect()
+{
+    port.close();
+    port.setPortName("");
+    ui->comboBox_Serial->setDisabled(false);
     serial_refresh_timer->stop();
-    ui->pushButton_Calculate->setDisabled(false);
-    ui->pushButton_Calculate->setToolTip(QString(""));
-    ui->label_Status->setText(QString("Connected"));//TODO Use language file
+    ui->pushButton_Calculate->setDisabled(true);
+    ui->pushButton_Calculate->setToolTip(QString("You need to Connect first"));//TODO Use language file
+    ui->label_Status->setText(QString("Disconnected"));//TODO Use language file
+    ui->pushButton_Connect->setText("Connect");//TODO Use language file
+    serial_refresh_timer->start(100);
 }
 
 
