@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pushButton_Calculate->setDisabled(true);
     ui->pushButton_Calculate->setToolTip(QString("You need to Connect first"));//TODO Use language file
     ui->pushButton_add->click(); // simple way to prevent a situation where there is no opeartor selected
+    ui->label_Status->setText(QString("Disconnected"));//TODO Use language file
 }
 
 MainWindow::~MainWindow()
@@ -52,6 +53,7 @@ void MainWindow::on_pushButton_Connect_clicked()
     serial_refresh_timer->stop();
     ui->pushButton_Calculate->setDisabled(false);
     ui->pushButton_Calculate->setToolTip(QString(""));
+    ui->label_Status->setText(QString("Connected"));//TODO Use language file
 }
 
 
