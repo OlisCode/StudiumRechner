@@ -32,6 +32,10 @@ private slots:
 
     void on_pushButton_divide_clicked();
 
+    void on_lineEdit_LeftOperand_returnPressed();
+
+    void on_lineEdit_RightOperand_returnPressed();
+
 private:
     Ui::MainWindow *ui;
     QSerialPort port;

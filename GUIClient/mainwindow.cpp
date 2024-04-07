@@ -149,3 +149,15 @@ void MainWindow::on_pushButton_divide_clicked()
     ui->pushButton_divide->setDown(true);
 }
 
+
+void MainWindow::on_lineEdit_LeftOperand_returnPressed()
+{
+    ui->pushButton_Calculate->click();
+}
+
+
+void MainWindow::on_lineEdit_RightOperand_returnPressed()
+{
+    ui->pushButton_Calculate->click();
+}
+
