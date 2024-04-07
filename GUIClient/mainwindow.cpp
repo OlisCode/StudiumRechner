@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QSerialPortInfo>
 #include <QSerialPort>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -13,6 +14,9 @@ MainWindow::MainWindow(QWidget *parent)
     QValidator *operand_validator = new QRegularExpressionValidator(QRegularExpression("^[0-9]*$"));
     ui->lineEdit_LeftOperand->setValidator(operand_validator);
     ui->lineEdit_RightOperand->setValidator(operand_validator);
+    serial_refresh_timer = new QTimer(this);
+    connect(serial_refresh_timer, &QTimer::timeout, this, &MainWindow::refreshPorts);
+    serial_refresh_timer->start(100);
 }
 
 MainWindow::~MainWindow()
@@ -20,16 +24,20 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_refreshPorts_clicked()
+void MainWindow::refreshPorts()
 {
     QList<QSerialPortInfo> ports = QSerialPortInfo().availablePorts();
     QList<QString> portnames=QList<QString>(ports.length());
     for(int i=0; i<ports.length();i++){
-        qDebug()<<ports[i].portName();
+        //qDebug()<<ports[i].portName();
         portnames[i] = ports[i].portName();
     }
-    ui->comboBox_Serial->clear();
-    ui->comboBox_Serial->addItems(portnames);
+    if(portnames_in_view != portnames){ //We only want to update the popup when sth. actually changed cause otherwise the user is unable to click anything during the refresh
+        portnames_in_view = portnames;
+        ui->comboBox_Serial->clear();
+        ui->comboBox_Serial->addItems(portnames);
+        ui->comboBox_Serial->hidePopup(); //This could be kind of annoying but is there to prevent strange behavior of the Popup when the items change
+    }
 }
 
 
@@ -39,8 +47,8 @@ void MainWindow::on_pushButton_Connect_clicked()
     port.setBaudRate(115200);
     port.open(QIODevice::ReadWrite);
     ui->comboBox_Serial->setDisabled(true);
-    ui->pushButton_refreshPorts->setDisabled(true);
     ui->pushButton_Connect->setDisabled(true);
+    serial_refresh_timer->stop();
 }
 
 

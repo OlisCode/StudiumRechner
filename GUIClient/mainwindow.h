@@ -18,7 +18,7 @@ public:
 
 private slots:
 
-    void on_pushButton_refreshPorts_clicked();
+    void refreshPorts();
 
     void on_pushButton_Connect_clicked();
 
@@ -28,5 +28,7 @@ private:
     Ui::MainWindow *ui;
     QSerialPort port;
     quint8 calculate_checksum(QByteArray message);
+    QTimer *serial_refresh_timer;
+    QList<QString> portnames_in_view;
 };
 #endif // MAINWINDOW_H

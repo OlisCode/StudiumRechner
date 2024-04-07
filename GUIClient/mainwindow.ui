@@ -20,19 +20,16 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
-         <widget class="QComboBox" name="comboBox_Serial"/>
+         <widget class="QComboBox" name="comboBox_Serial">
+          <property name="currentText">
+           <string/>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_Connect">
           <property name="text">
            <string>Connect</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_refreshPorts">
-          <property name="text">
-           <string>Refresh Ports</string>
           </property>
          </widget>
         </item>
