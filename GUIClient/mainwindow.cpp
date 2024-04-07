@@ -60,7 +60,7 @@ void MainWindow::on_pushButton_Calculate_clicked()
     qDebug()<<port.readLine();
 }
 
-qint32 MainWindow::calculate_checksum(QByteArray message)
+quint8 MainWindow::calculate_checksum(QByteArray message)
 {
     // int32 is chosen because arduino string to int function returns int32_t.
     // by using the same datatype it is ensured that the comparison will work even when an overflow occurs since
