@@ -24,7 +24,7 @@ void loop() {
       String first_operand_str = incomming_line.substring(index_a + 1, index_b);
       String operator_str = incomming_line.substring(index_b + 1, index_c);
       String second_operand_str = incomming_line.substring(index_c + 1, index_d);
-      if (is_full_digit(first_operand_str) && is_full_digit(second_operand_str) && is_operator(operator_str)) {
+      if (is_full_digit(first_operand_str) && is_full_digit(second_operand_str)) {
         float result = 0;
         float checkresult = 0;
         float first_operand = first_operand_str.toInt();
@@ -52,7 +52,7 @@ void loop() {
             }
             break;
           default:
-            Serial.print("FAIL");
+            Serial.print("NOOP");
             break;
         }
       } else {
@@ -102,21 +102,4 @@ bool is_full_digit(String tocheck) {
     toreturn = toreturn & isDigit(tocheck[i]);
   }
   return toreturn;
-}
-bool is_operator(String tocheck) {
-  if (tocheck.length() != 1) {
-    return false;
-  }
-  switch (byte(tocheck[0])) {
-    case 0x2a:  //*
-      return true;
-    case 0x2b:  //+
-      return true;
-    case 0x2d:  //-
-      return true;
-    case 0x2f:  ///
-      return true;
-    default:
-      return false;
-  }
 }
