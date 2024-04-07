@@ -9,8 +9,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    QList<QString> operators=QList<QString>({"+","-","*","/"});
-    ui->comboBox_operator->addItems(operators);
     QValidator *operand_validator = new QRegularExpressionValidator(QRegularExpression("^[0-9]*$"));
     ui->lineEdit_LeftOperand->setValidator(operand_validator);
     ui->lineEdit_RightOperand->setValidator(operand_validator);
@@ -19,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     serial_refresh_timer->start(100);
     ui->pushButton_Calculate->setDisabled(true);
     ui->pushButton_Calculate->setToolTip(QString("You need to Connect first"));//TODO Use language file
+    ui->pushButton_add->click(); // simple way to prevent a situation where there is no opeartor selected
 }
 
 MainWindow::~MainWindow()
@@ -58,7 +57,7 @@ void MainWindow::on_pushButton_Connect_clicked()
 
 void MainWindow::on_pushButton_Calculate_clicked()
 {
-    QString message_str="AB"+ui->lineEdit_LeftOperand->text()+"C"+ui->comboBox_operator->currentText()+"D"+ui->lineEdit_RightOperand->text()+"E";
+    QString message_str="AB"+ui->lineEdit_LeftOperand->text()+"C"+selected_operator+"D"+ui->lineEdit_RightOperand->text()+"E";
     QByteArray message = message_str.toUtf8();
     message.append(QString("X").toUtf8());
     message.append(QString::number(7139).toUtf8());
@@ -84,3 +83,43 @@ quint8 MainWindow::calculate_checksum(QByteArray message)
     }
     return toreturn;
 }
+
+void MainWindow::on_pushButton_add_clicked()
+{
+    selected_operator = QString("+");
+    ui->pushButton_add->setDown(true);
+    ui->pushButton_subtract->setDown(false);
+    ui->pushButton_multiply->setDown(false);
+    ui->pushButton_divide->setDown(false);
+}
+
+
+void MainWindow::on_pushButton_subtract_clicked()
+{
+    selected_operator = QString("-");
+    ui->pushButton_add->setDown(false);
+    ui->pushButton_subtract->setDown(true);
+    ui->pushButton_multiply->setDown(false);
+    ui->pushButton_divide->setDown(false);
+}
+
+
+void MainWindow::on_pushButton_multiply_clicked()
+{
+    selected_operator = QString("*");
+    ui->pushButton_add->setDown(false);
+    ui->pushButton_subtract->setDown(false);
+    ui->pushButton_multiply->setDown(true);
+    ui->pushButton_divide->setDown(false);
+}
+
+
+void MainWindow::on_pushButton_divide_clicked()
+{
+    selected_operator = QString("/");
+    ui->pushButton_add->setDown(false);
+    ui->pushButton_subtract->setDown(false);
+    ui->pushButton_multiply->setDown(false);
+    ui->pushButton_divide->setDown(true);
+}
+
