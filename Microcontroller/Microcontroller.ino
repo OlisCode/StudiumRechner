@@ -9,21 +9,23 @@ void setup() {
 void loop() {
   //String incomming_line = readline();
   String incomming_line = Serial.readStringUntil('\n');
-  int index_a = incomming_line.indexOf('A');
-  int index_b = incomming_line.indexOf('B');
+  int index_ab = incomming_line.indexOf("AB"); // If the fist 2 Characters are BB the package should not be answered
   int index_c = incomming_line.indexOf('C');
   int index_d = incomming_line.indexOf('D');
+  int index_e = incomming_line.indexOf('E');
   int index_y = incomming_line.indexOf('Y');
   int index_z = incomming_line.indexOf('Z');
   // Only if every index character is found:
-  if (index_a >= 0 && index_b >= 0 && index_c >= 0 && index_d >= 0 && index_y >= 0 && index_z >= 0) {
+  if (index_ab >= 0 && index_c >= 0 && index_d >= 0 && index_e >= 0 && index_y >= 0 && index_z >= 0) {
     String checksum_from_host_str = incomming_line.substring(index_y + 1, index_z);
-    uint8_t checksum_calculated = calculate_checksum(incomming_line.substring(index_a, index_y+1));
+    uint8_t checksum_calculated = calculate_checksum(incomming_line.substring(index_ab, index_y+1));
     uint8_t checksum_from_host_uint8 = checksum_from_host_str.toInt();
     if (checksum_from_host_uint8 == checksum_calculated) {
-      String first_operand_str = incomming_line.substring(index_a + 1, index_b);
-      String operator_str = incomming_line.substring(index_b + 1, index_c);
-      String second_operand_str = incomming_line.substring(index_c + 1, index_d);
+      String first_operand_str = incomming_line.substring(index_ab + 2, index_c);
+      String operator_str = incomming_line.substring(index_c + 1, index_d);
+      String second_operand_str = incomming_line.substring(index_d + 1, index_e);
+      Serial.println(first_operand_str);
+      Serial.println(second_operand_str);
       if (is_full_digit(first_operand_str) && is_full_digit(second_operand_str)) {
         float result = 0;
         float checkresult = 0;
