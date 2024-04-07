@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
     serial_refresh_timer = new QTimer(this);
     connect(serial_refresh_timer, &QTimer::timeout, this, &MainWindow::refreshPorts);
     serial_refresh_timer->start(100);
+    ui->pushButton_Calculate->setDisabled(true);
+    ui->pushButton_Calculate->setToolTip(QString("You need to Connect first"));//TODO Use language file
 }
 
 MainWindow::~MainWindow()
@@ -49,6 +51,8 @@ void MainWindow::on_pushButton_Connect_clicked()
     ui->comboBox_Serial->setDisabled(true);
     ui->pushButton_Connect->setDisabled(true);
     serial_refresh_timer->stop();
+    ui->pushButton_Calculate->setDisabled(false);
+    ui->pushButton_Calculate->setToolTip(QString(""));
 }
 
 
