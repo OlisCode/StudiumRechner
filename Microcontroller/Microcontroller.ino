@@ -24,8 +24,6 @@ void loop() {
       String first_operand_str = incomming_line.substring(index_ab + 2, index_c);
       String operator_str = incomming_line.substring(index_c + 1, index_d);
       String second_operand_str = incomming_line.substring(index_d + 1, index_e);
-      Serial.println(first_operand_str);
-      Serial.println(second_operand_str);
       if (is_full_digit(first_operand_str) && is_full_digit(second_operand_str)) {
         float result = 0;
         float checkresult = 0;
