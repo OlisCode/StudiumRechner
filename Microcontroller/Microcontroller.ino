@@ -18,8 +18,9 @@ void loop() {
   // Only if every index character is found:
   if (index_a >= 0 && index_b >= 0 && index_c >= 0 && index_d >= 0 && index_y >= 0 && index_z >= 0) {
     String checksum_from_host_str = incomming_line.substring(index_y + 1, index_z);
-    uint8_t checksum_calculated = calculate_checksum(incomming_line.substring(index_a, index_y));
-    if (checksum_from_host_str.toInt() == checksum_calculated) {
+    uint8_t checksum_calculated = calculate_checksum(incomming_line.substring(index_a, index_y+1));
+    uint8_t checksum_from_host_uint8 = checksum_from_host_str.toInt();
+    if (checksum_from_host_uint8 == checksum_calculated) {
       String first_operand_str = incomming_line.substring(index_a + 1, index_b);
       String operator_str = incomming_line.substring(index_b + 1, index_c);
       String second_operand_str = incomming_line.substring(index_c + 1, index_d);
