@@ -36,7 +36,7 @@ void MainWindow::on_pushButton_refreshPorts_clicked()
 void MainWindow::on_pushButton_Connect_clicked()
 {
     port.setPortName(ui->comboBox_Serial->currentText());
-    port.setBaudRate(9600);
+    port.setBaudRate(115200);
     port.open(QIODevice::ReadWrite);
     ui->comboBox_Serial->setDisabled(true);
     ui->pushButton_refreshPorts->setDisabled(true);
