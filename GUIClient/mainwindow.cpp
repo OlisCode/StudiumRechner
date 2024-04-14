@@ -62,8 +62,8 @@ void MainWindow::serialconnect()
         serial_refresh_timer->stop();
         ui->pushButton_Calculate->setDisabled(false);
         ui->pushButton_Calculate->setToolTip(QString(""));
-        ui->label_Status->setText(QString("Connected"));//TODO Use language file
-        ui->pushButton_Connect->setText("Disconnect");//TODO Use language file
+        ui->label_Status->setText(QCoreApplication::translate("MainWindow", "Connected"));//TODO Use language file
+        ui->pushButton_Connect->setText(QCoreApplication::translate("MainWindow", "Disconnect"));//TODO Use language file
     }
 }
 
@@ -74,9 +74,9 @@ void MainWindow::serialdisconnect()
     ui->comboBox_Serial->setDisabled(false);
     serial_refresh_timer->stop();
     ui->pushButton_Calculate->setDisabled(true);
-    ui->pushButton_Calculate->setToolTip(QString("You need to Connect first"));//TODO Use language file
-    ui->label_Status->setText(QString("Disconnected"));//TODO Use language file
-    ui->pushButton_Connect->setText("Connect");//TODO Use language file
+    ui->pushButton_Calculate->setToolTip(QCoreApplication::translate("MainWindow", "You need to Connect first"));//TODO Use language file
+    ui->label_Status->setText(QCoreApplication::translate("MainWindow", "Disconnected"));//TODO Use language file
+    ui->pushButton_Connect->setText(QCoreApplication::translate("MainWindow", "Connect"));//TODO Use language file
     serial_refresh_timer->start(100);
 }
 
