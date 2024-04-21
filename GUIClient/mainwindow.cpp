@@ -20,6 +20,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pushButton_Calculate->setToolTip(QString("You need to Connect first"));//TODO Use language file
     ui->pushButton_add->click(); // simple way to prevent a situation where there is no opeartor selected
     ui->label_Status->setText(QString("Disconnected"));//TODO Use language file
+    ui->pushButton_add->setFocusPolicy(Qt::NoFocus);
+    ui->pushButton_divide->setFocusPolicy(Qt::NoFocus);
+    ui->pushButton_subtract->setFocusPolicy(Qt::NoFocus);
+    ui->pushButton_multiply->setFocusPolicy(Qt::NoFocus);
+    ui->pushButton_Calculate->setFocusPolicy(Qt::NoFocus);
+    ui->pushButton_Connect->setFocusPolicy(Qt::NoFocus);
 }
 
 MainWindow::~MainWindow()
@@ -149,40 +155,40 @@ quint8 MainWindow::calculate_checksum(QByteArray message)
 void MainWindow::on_pushButton_add_clicked()
 {
     selected_operator = QString("+");
-    ui->pushButton_add->setDown(true);
-    ui->pushButton_subtract->setDown(false);
-    ui->pushButton_multiply->setDown(false);
-    ui->pushButton_divide->setDown(false);
+    ui->pushButton_add->setChecked(true);
+    ui->pushButton_subtract->setChecked(false);
+    ui->pushButton_multiply->setChecked(false);
+    ui->pushButton_divide->setChecked(false);
 }
 
 
 void MainWindow::on_pushButton_subtract_clicked()
 {
     selected_operator = QString("-");
-    ui->pushButton_add->setDown(false);
-    ui->pushButton_subtract->setDown(true);
-    ui->pushButton_multiply->setDown(false);
-    ui->pushButton_divide->setDown(false);
+    ui->pushButton_add->setChecked(false);
+    ui->pushButton_subtract->setChecked(true);
+    ui->pushButton_multiply->setChecked(false);
+    ui->pushButton_divide->setChecked(false);
 }
 
 
 void MainWindow::on_pushButton_multiply_clicked()
 {
     selected_operator = QString("*");
-    ui->pushButton_add->setDown(false);
-    ui->pushButton_subtract->setDown(false);
-    ui->pushButton_multiply->setDown(true);
-    ui->pushButton_divide->setDown(false);
+    ui->pushButton_add->setChecked(false);
+    ui->pushButton_subtract->setChecked(false);
+    ui->pushButton_multiply->setChecked(true);
+    ui->pushButton_divide->setChecked(false);
 }
 
 
 void MainWindow::on_pushButton_divide_clicked()
 {
     selected_operator = QString("/");
-    ui->pushButton_add->setDown(false);
-    ui->pushButton_subtract->setDown(false);
-    ui->pushButton_multiply->setDown(false);
-    ui->pushButton_divide->setDown(true);
+    ui->pushButton_add->setChecked(false);
+    ui->pushButton_subtract->setChecked(false);
+    ui->pushButton_multiply->setChecked(false);
+    ui->pushButton_divide->setChecked(true);
 }
 
 
