@@ -71,7 +71,7 @@ void loop() {
       response += resultvalid;
     }
     response += "CX" + requestid + "Y";
-    response += String(calculate_checksum(response)+"Z" + '\n');
+    response += String(calculate_checksum(response))+"Z" + '\n';
     Serial.print(response);
   }
 }
