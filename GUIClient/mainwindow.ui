@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="2">
-     <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,1,0">
+     <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,1">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="4,2,2">
         <item>
@@ -104,10 +104,24 @@
         </item>
        </layout>
       </item>
+     </layout>
+    </item>
+    <item row="1" column="2">
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="resulttextlabel">
         <property name="text">
-         <string>TextLabel</string>
+         <string>Result:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="resultlabel">
+        <property name="text">
+         <string/>
         </property>
        </widget>
       </item>
@@ -121,7 +135,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

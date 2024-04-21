@@ -3,6 +3,7 @@
 #include <QSerialPortInfo>
 #include <QSerialPort>
 #include <QTimer>
+#include <QRandomGenerator>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -83,18 +84,53 @@ void MainWindow::serialdisconnect()
 
 void MainWindow::on_pushButton_Calculate_clicked()
 {
+    ui ->resultlabel->setText(QString(""));
     QString message_str="AB"+ui->lineEdit_LeftOperand->text()+"C"+selected_operator+"D"+ui->lineEdit_RightOperand->text()+"E";
     QByteArray message = message_str.toUtf8();
     message.append(QString("X").toUtf8());
-    message.append(QString::number(7139).toUtf8());
+    qint32 id=QRandomGenerator::global()->generate();
+    message.append(QString::number(id).toUtf8());
     message.append(QString("Y").toUtf8());
     qint32 checksum = calculate_checksum(message);
     message.append(QString::number(checksum).toUtf8());
     message.append(QString("Z\n").toUtf8());
-    qDebug()<<message;
-    port.write(message);
-    port.waitForReadyRead(10000);
-    qDebug()<<port.readLine();
+    qDebug() << "Request: " << message;
+    QString response;
+    for(quint8 i=0;i<5;i++)
+    {
+        response="";
+        port.write(message);
+        port.waitForReadyRead(100);
+        response=port.readLine();
+        qDebug() << "Response:" <<response;
+        qint32 index_bb = response.indexOf("BB");  // If the fist 2 Characters are BB the package should not be answered
+        qint32 index_c = response.indexOf('C');
+        qint32 index_x = response.indexOf('X');
+        qint32 index_y = response.indexOf('Y');
+        qint32 index_z = response.indexOf('Z');
+        if(index_bb >= 0 && index_c >= 0 && index_x >= 0 && index_x >= 0 && index_y >= 0 && index_z >= 0)
+        {
+            qDebug()<<"Response contains all Indexes";
+            QString id_received = response.mid(index_x+1,index_y-index_x-1);
+            qDebug() << "Id received: " << id_received;
+            if(QString::number(id)==id_received)
+            {
+                qDebug() << "Received id matches requested";
+                QString checksum_received = response.mid(index_y+1,index_z-index_y-1);
+                qDebug() << "Checksum received: " << checksum_received;
+                quint8 checksum_calculated = calculate_checksum(response.mid(index_bb,index_y+1-index_bb).toUtf8());
+                qDebug() << "Checksum calculated: " << QString::number(checksum_calculated);
+                if(QString::number(checksum_calculated)==checksum_received)
+                {
+                    qDebug() << "Received checksum matches calculated";
+                    QString result =response.mid(index_bb+2,index_c-index_bb-2);
+                    ui ->resultlabel->setText(result);
+                    i=10;
+                }
+            }
+        }
+
+    }
 }
 
 quint8 MainWindow::calculate_checksum(QByteArray message)

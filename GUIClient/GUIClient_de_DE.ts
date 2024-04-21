@@ -10,7 +10,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="32"/>
-        <location filename="mainwindow.cpp" line="79"/>
+        <location filename="mainwindow.cpp" line="83"/>
         <source>Connect</source>
         <translation type="unfinished">Verbinden</translation>
     </message>
@@ -40,27 +40,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="110"/>
-        <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <location filename="mainwindow.ui" line="114"/>
+        <source>Result:</source>
+        <translation type="unfinished">Ergebnis:</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="65"/>
+        <location filename="mainwindow.cpp" line="69"/>
         <source>Connected</source>
         <translation type="unfinished">Verbunden</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="66"/>
+        <location filename="mainwindow.cpp" line="70"/>
         <source>Disconnect</source>
         <translation type="unfinished">Trennen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="77"/>
+        <location filename="mainwindow.cpp" line="81"/>
         <source>You need to Connect first</source>
         <translation type="unfinished">Stelle zuerst eine Verbindung her</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="78"/>
+        <location filename="mainwindow.cpp" line="82"/>
         <source>Disconnected</source>
         <translation type="unfinished">Getrennt</translation>
     </message>
