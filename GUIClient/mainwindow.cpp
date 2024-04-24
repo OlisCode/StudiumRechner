@@ -17,9 +17,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(serial_refresh_timer, &QTimer::timeout, this, &MainWindow::refreshPorts);
     serial_refresh_timer->start(100);
     ui->pushButton_Calculate->setDisabled(true);
-    ui->pushButton_Calculate->setToolTip(QString("You need to Connect first"));//TODO Use language file
+    ui->pushButton_Calculate->setToolTip(QCoreApplication::translate("MainWindow", "You need to Connect first"));//TODO Use language file
     ui->pushButton_add->click(); // simple way to prevent a situation where there is no opeartor selected
-    ui->label_Status->setText(QString("Disconnected"));//TODO Use language file
+    ui->label_Status->setText(QCoreApplication::translate("MainWindow", "Disconnected"));//TODO Use language file
     ui->pushButton_add->setFocusPolicy(Qt::NoFocus);
     ui->pushButton_divide->setFocusPolicy(Qt::NoFocus);
     ui->pushButton_subtract->setFocusPolicy(Qt::NoFocus);
