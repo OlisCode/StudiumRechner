@@ -45,5 +45,6 @@ private:
     QString selected_operator;
     void serialconnect();
     void serialdisconnect();
+    bool eventFilter(QObject *object, QEvent *event);
 };
 #endif // MAINWINDOW_H
