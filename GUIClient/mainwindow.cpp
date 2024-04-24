@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pushButton_multiply->setFocusPolicy(Qt::NoFocus);
     ui->pushButton_Calculate->setFocusPolicy(Qt::NoFocus);
     ui->pushButton_Connect->setFocusPolicy(Qt::NoFocus);
+    ui->comboBox_Serial->setFocusPolicy(Qt::NoFocus);
     ui->lineEdit_LeftOperand->installEventFilter(this);
     ui->lineEdit_RightOperand->installEventFilter(this);
 }
@@ -38,19 +39,22 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
         switch (keyEvent->key()) {
         case Qt::Key_Plus:
             on_pushButton_add_clicked();
-            return true;
+            break;
         case Qt::Key_Minus:
             on_pushButton_subtract_clicked();
-            return true;
+            break;
         case Qt::Key_Asterisk:
             on_pushButton_multiply_clicked();
-            return true;
+            break;
         case Qt::Key_Slash:
             on_pushButton_divide_clicked();
-            return true;
+            break;
         default:
             return false;
         }
+        QKeyEvent key(QEvent::KeyPress, Qt::Key_Tab, Qt::NoModifier);
+        QApplication::sendEvent(this, &key);
+        return true;
     }
     return false;
 }
