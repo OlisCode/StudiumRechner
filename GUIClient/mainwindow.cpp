@@ -76,6 +76,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::refreshPorts()
 {
+    // Update the list of available ports
     QList<QSerialPortInfo> ports = QSerialPortInfo().availablePorts();
     QList<QString> portnames=QList<QString>(ports.length());
     for(int i=0; i<ports.length();i++){
@@ -93,6 +94,7 @@ void MainWindow::refreshPorts()
 
 void MainWindow::on_pushButton_Connect_clicked()
 {
+    // Connect to the port or if connected disconnect
     if(port.portName()==""){
         serialconnect();
     }else{
@@ -102,36 +104,39 @@ void MainWindow::on_pushButton_Connect_clicked()
 
 void MainWindow::serialconnect()
 {
+    // Connect to the port
     if(port.portName()==""){
         port.setPortName(ui->comboBox_Serial->currentText());
         port.setBaudRate(115200);
         port.open(QIODevice::ReadWrite);
         ui->comboBox_Serial->setDisabled(true);
-        serial_refresh_timer->stop();
         ui->pushButton_Calculate->setDisabled(false);
         ui->pushButton_Calculate->setToolTip(QString(""));
-        ui->label_Status->setText(QCoreApplication::translate("MainWindow", "Connected"));//TODO Use language file
-        ui->pushButton_Connect->setText(QCoreApplication::translate("MainWindow", "Disconnect"));//TODO Use language file
+        ui->label_Status->setText(QCoreApplication::translate("MainWindow", "Connected"));
+        ui->pushButton_Connect->setText(QCoreApplication::translate("MainWindow", "Disconnect"));
+        serial_refresh_timer->stop();   // Since we are connected there is no point in refreshing the list of available ports
     }
 }
 
 void MainWindow::serialdisconnect()
 {
+    // Disconnect from the port
     port.close();
     port.setPortName("");
     ui->comboBox_Serial->setDisabled(false);
-    serial_refresh_timer->stop();
     ui->pushButton_Calculate->setDisabled(true);
-    ui->pushButton_Calculate->setToolTip(QCoreApplication::translate("MainWindow", "You need to Connect first"));//TODO Use language file
-    ui->label_Status->setText(QCoreApplication::translate("MainWindow", "Disconnected"));//TODO Use language file
-    ui->pushButton_Connect->setText(QCoreApplication::translate("MainWindow", "Connect"));//TODO Use language file
-    serial_refresh_timer->start(100);
+    ui->pushButton_Calculate->setToolTip(QCoreApplication::translate("MainWindow", "You need to Connect first"));
+    ui->label_Status->setText(QCoreApplication::translate("MainWindow", "Disconnected"));
+    ui->pushButton_Connect->setText(QCoreApplication::translate("MainWindow", "Connect"));
+    serial_refresh_timer->start(100);   // Start the timer back up to refresh the list of ports
 }
 
 
 void MainWindow::on_pushButton_Calculate_clicked()
 {
-    ui ->resultlabel->setText(QString(""));
+    // Assemble the task, send it and then disassemble the result
+    // Assemble the task
+    ui ->resultlabel->setText(QString("")); // Clear the result in the ui to prevent a false display if the rest fails
     QString message_str="AB"+ui->lineEdit_LeftOperand->text()+"C"+selected_operator+"D"+ui->lineEdit_RightOperand->text()+"E";
     QByteArray message = message_str.toUtf8();
     message.append(QString("X").toUtf8());
@@ -143,14 +148,15 @@ void MainWindow::on_pushButton_Calculate_clicked()
     message.append(QString("Z\n").toUtf8());
     qDebug() << "Request: " << message;
     QString response;
+    // Send the taskl up to 5 times if there is a failure in the communication
     for(quint8 i=0;i<5;i++)
     {
         response="";
-        port.write(message);
+        port.write(message);    // Send the task
         port.waitForReadyRead(100);
         response=port.readLine();
         qDebug() << "Response:" <<response;
-        qint32 index_bb = response.indexOf("BB");  // If the fist 2 Characters are BB the package should not be answered
+        qint32 index_bb = response.indexOf("BB");  // If the fist 2 Characters are AB the package should not be answered
         qint32 index_c = response.indexOf('C');
         qint32 index_x = response.indexOf('X');
         qint32 index_y = response.indexOf('Y');
@@ -182,8 +188,7 @@ void MainWindow::on_pushButton_Calculate_clicked()
 
 quint8 MainWindow::calculate_checksum(QByteArray message)
 {
-    // int32 is chosen because arduino string to int function returns int32_t.
-    // by using the same datatype it is ensured that the comparison will work even when an overflow occurs since
+    // by using the same datatype on both the arduino and the client it is ensured that the comparison will work even when an overflow occurs since
     // this overflow happens on both sides in the same way.
     quint8 toreturn = 0;
     for(int i=0;i<message.length();i++)
