@@ -11,16 +11,18 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    // Add a filter to the operands so we can only enter numbers
     QValidator *operand_validator = new QRegularExpressionValidator(QRegularExpression("^[0-9]*$"));
-    ui->lineEdit_LeftOperand->setValidator(operand_validator);
-    ui->lineEdit_RightOperand->setValidator(operand_validator);
+    // Create a timer to automaticly refreshes the serialports listed in the combobox
     serial_refresh_timer = new QTimer(this);
     connect(serial_refresh_timer, &QTimer::timeout, this, &MainWindow::refreshPorts);
     serial_refresh_timer->start(100);
+    // Prepare an initial state for the aplication
     ui->pushButton_Calculate->setDisabled(true);
-    ui->pushButton_Calculate->setToolTip(QCoreApplication::translate("MainWindow", "You need to Connect first"));//TODO Use language file
+    ui->pushButton_Calculate->setToolTip(QCoreApplication::translate("MainWindow", "You need to Connect first"));
     ui->pushButton_add->click(); // simple way to prevent a situation where there is no opeartor selected
-    ui->label_Status->setText(QCoreApplication::translate("MainWindow", "Disconnected"));//TODO Use language file
+    ui->label_Status->setText(QCoreApplication::translate("MainWindow", "Disconnected"));
+    // Remove unwanted elements from the tabindex to simplify usage using keyboard
     ui->pushButton_add->setFocusPolicy(Qt::NoFocus);
     ui->pushButton_divide->setFocusPolicy(Qt::NoFocus);
     ui->pushButton_subtract->setFocusPolicy(Qt::NoFocus);
@@ -28,12 +30,18 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pushButton_Calculate->setFocusPolicy(Qt::NoFocus);
     ui->pushButton_Connect->setFocusPolicy(Qt::NoFocus);
     ui->comboBox_Serial->setFocusPolicy(Qt::NoFocus);
+    // Prepare the lineedits
+    ui->lineEdit_LeftOperand->setValidator(operand_validator);
+    ui->lineEdit_RightOperand->setValidator(operand_validator);
+    // To enable detection of pressing an operator while in the lineedit QShortcut did not work, therefore an eventfilter is used.
     ui->lineEdit_LeftOperand->installEventFilter(this);
     ui->lineEdit_RightOperand->installEventFilter(this);
 }
 
 bool MainWindow::eventFilter(QObject *object, QEvent *event)
 {
+    // Check if the event is an operator and then redirect it to the coresponding button
+    // if not we just pass it along
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         switch (keyEvent->key()) {
@@ -52,6 +60,7 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
         default:
             return false;
         }
+        // Tab to the next operand after the user pressed a operator
         QKeyEvent key(QEvent::KeyPress, Qt::Key_Tab, Qt::NoModifier);
         QApplication::sendEvent(this, &key);
         return true;
@@ -61,6 +70,7 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
 
 MainWindow::~MainWindow()
 {
+    // TODO Disconnect from port
     delete ui;
 }
 
