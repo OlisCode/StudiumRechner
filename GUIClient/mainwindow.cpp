@@ -46,16 +46,16 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         switch (keyEvent->key()) {
         case Qt::Key_Plus:
-            on_pushButton_add_clicked();
+            ui->pushButton_add->click();
             break;
         case Qt::Key_Minus:
-            on_pushButton_subtract_clicked();
+            ui->pushButton_subtract->click();
             break;
         case Qt::Key_Asterisk:
-            on_pushButton_multiply_clicked();
+            ui->pushButton_multiply->click();
             break;
         case Qt::Key_Slash:
-            on_pushButton_divide_clicked();
+            ui->pushButton_divide->click();
             break;
         default:
             return false;
