@@ -31,8 +31,8 @@ void loop() {
       String second_operand_str = incomming_line.substring(index_d + 1, index_e);
       if (is_full_digit(first_operand_str) && is_full_digit(second_operand_str)) {
         // TODO Check for overflow on input
-        float first_operand = float(first_operand_str.toInt());
-        float second_operand = float(second_operand_str.toInt());
+        float first_operand = float(first_operand_str.toFloat());
+        float second_operand = float(second_operand_str.toFloat());
         switch (byte(operator_str[0])) {
           case 0x2a:  // *
             result = float(first_operand * second_operand);
