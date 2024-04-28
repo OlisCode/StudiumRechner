@@ -30,28 +30,48 @@ void loop() {
       String operator_str = incomming_line.substring(index_c + 1, index_d);
       String second_operand_str = incomming_line.substring(index_d + 1, index_e);
       if (is_full_digit(first_operand_str) && is_full_digit(second_operand_str)) {
-        float first_operand = first_operand_str.toInt();
-        float second_operand = second_operand_str.toInt();
+        // TODO Check for overflow on input
+        float first_operand = float(first_operand_str.toInt());
+        float second_operand = float(second_operand_str.toInt());
         switch (byte(operator_str[0])) {
           case 0x2a:  // *
-            result = first_operand * second_operand;
-            checkresult = result / second_operand;
-            resultvalid = "VALID";
+            result = float(first_operand * second_operand);
+            checkresult = float(result / second_operand);
+            if(first_operand==checkresult){
+              resultvalid = "VALID";
+            }else{
+              resultvalid = "ERR";
+            }
             break;
           case 0x2b:  // +
-            result = first_operand + second_operand;
-            resultvalid = "VALID";
+            result = float(first_operand + second_operand);
+            checkresult = float(result - second_operand);
+            if(first_operand==checkresult){
+              resultvalid = "VALID";
+            }else{
+              resultvalid = "ERR";
+            }
             break;
           case 0x2d:  // -
-            result = first_operand - second_operand;
-            resultvalid = "VALID";
+            result = float(first_operand - second_operand);
+            checkresult = float(result + second_operand);
+            if(first_operand==checkresult){
+              resultvalid = "VALID";
+            }else{
+              resultvalid = "ERR";
+            }
             break;
           case 0x2f:  // /
             if (second_operand == 0) {
               resultvalid = "DIVBYZERO";
             } else {
-              result = first_operand / second_operand;
+              result = float(first_operand / second_operand);
+              checkresult = float(result * second_operand);
+            if(first_operand==checkresult){
               resultvalid = "VALID";
+            }else{
+              resultvalid = "ERR";
+            }
             }
             break;
           default:
