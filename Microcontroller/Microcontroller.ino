@@ -24,65 +24,76 @@ void loop() {
     float checkresult = 0;
     String resultvalid = "";
     String requestid = incomming_line.substring(index_x + 1, index_y);;
+    String requestid = incomming_line.substring(index_x + 1, index_y);
     uint8_t checksum_from_host_uint8 = checksum_from_host_str.toInt();
     if (checksum_from_host_uint8 == checksum_calculated) {
       String first_operand_str = incomming_line.substring(index_ab + 2, index_c);
       String operator_str = incomming_line.substring(index_c + 1, index_d);
       String second_operand_str = incomming_line.substring(index_d + 1, index_e);
       if (is_full_digit(first_operand_str) && is_full_digit(second_operand_str)) {
-        // TODO Check for overflow on input
         float first_operand = float(first_operand_str.toFloat());
         float second_operand = float(second_operand_str.toFloat());
-        switch (byte(operator_str[0])) {
-          case 0x2a:  // *
-            result = float(first_operand * second_operand);
-            checkresult = float(result / second_operand);
-            if(first_operand==checkresult){
-              resultvalid = "VALID";
-            }else{
-              resultvalid = "ERR";
-            }
-            break;
-          case 0x2b:  // +
-            result = float(first_operand + second_operand);
-            checkresult = float(result - second_operand);
-            if(first_operand==checkresult){
-              resultvalid = "VALID";
-            }else{
-              resultvalid = "ERR";
-            }
-            break;
-          case 0x2d:  // -
-            result = float(first_operand - second_operand);
-            checkresult = float(result + second_operand);
-            if(first_operand==checkresult){
-              resultvalid = "VALID";
-            }else{
-              resultvalid = "ERR";
-            }
-            break;
-          case 0x2f:  // /
-            if (second_operand == 0) {
-              resultvalid = "DIVBYZERO";
-            } else {
-              result = float(first_operand / second_operand);
-              checkresult = float(result * second_operand);
-            if(first_operand==checkresult){
-              resultvalid = "VALID";
-            }else{
-              resultvalid = "ERR";
-            }
-            }
-            break;
-          default:
-            resultvalid = "NOOP";
-            break;
+        // Check the number of significant digits on the operands as under certain conditions unpredicted results can occur that are not catched inside String.toFloat
+        // Also check if the numbers are valid
+        if (first_operand_str.length() > 6 || second_operand_str.length() > 6) {
+          resultvalid = "ERR";
+        } else if (!checkfloat(first_operand) || !checkfloat(second_operand)) {
+          resultvalid = "ERR";
+        } else {
+          switch (byte(operator_str[0])) {
+            case 0x2a:  // *
+              result = float(first_operand * second_operand);
+              checkresult = float(result / second_operand);
+              if (first_operand == checkresult) {
+                resultvalid = "VALID";
+              } else {
+                resultvalid = "ERR";
+              }
+              break;
+            case 0x2b:  // +
+              result = float(first_operand + second_operand);
+              checkresult = float(result - second_operand);
+              if (first_operand == checkresult) {
+                resultvalid = "VALID";
+              } else {
+                resultvalid = "ERR";
+              }
+              break;
+            case 0x2d:  // -
+              result = float(first_operand - second_operand);
+              checkresult = float(result + second_operand);
+              if (first_operand == checkresult) {
+                resultvalid = "VALID";
+              } else {
+                resultvalid = "ERR";
+              }
+              break;
+            case 0x2f:  // /
+              if (second_operand == 0) {
+                resultvalid = "DIVBYZERO";
+              } else {
+                result = float(first_operand / second_operand);
+                checkresult = float(result * second_operand);
+                if (first_operand == checkresult) {
+                  resultvalid = "VALID";
+                } else {
+                  resultvalid = "ERR";
+                }
+              }
+              break;
+            default:
+              resultvalid = "NOOP";
+              break;
+          }
         }
       } else {
         resultvalid = "ERR";
       }
     } else {
       resultvalid = "CHKSUM";
+    }
+    if (!checkfloat(result)) {
+      resultvalid = "ERR";
     }
     String response = "BB";
     if (resultvalid == "VALID") {
@@ -91,9 +102,29 @@ void loop() {
       response += resultvalid;
     }
     response += "CX" + requestid + "Y";
-    response += String(calculate_checksum(response))+"Z" + '\n';
+    response += String(calculate_checksum(response)) + "Z" + '\n';
     Serial.print(response);
   }
+}
+
+bool checkfloat(float number) {
+  if (isnan(number)) return false;
+  if (isinf(number)) return false;
+  // check if the number has more than 6 digits. if so we can not be certain if the number is correct or if it is rounded to much
+  String number_as_string = String(number);
+  // cut away trailing zeros after the decimal point
+  for (uint32_t i = number_as_string.length(); i > 0; i--) {
+    char testchar = number_as_string.charAt(i - 1);
+    if (testchar == char('0')) {
+      number_as_string = number_as_string.substring(0, i - 1);
+    } else {
+      break;
+    }
+  }
+  number_as_string.replace(".", "");  // remove the decimal point
+  number_as_string.replace("-", "");  // remove the minus if present
+  if (number_as_string.length() > 6) return false;
+  return true;
 }
 
 String readline() {
