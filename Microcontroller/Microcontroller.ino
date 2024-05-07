@@ -23,7 +23,6 @@ void loop() {
     float result = 0;
     float checkresult = 0;
     String resultvalid = "";
-    String requestid = incomming_line.substring(index_x + 1, index_y);;
     String requestid = incomming_line.substring(index_x + 1, index_y);
     uint8_t checksum_from_host_uint8 = checksum_from_host_str.toInt();
     if (checksum_from_host_uint8 == checksum_calculated) {
