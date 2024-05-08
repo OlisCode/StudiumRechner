@@ -32,6 +32,8 @@ void loop() {
       if (is_full_digit(first_operand_str) && is_full_digit(second_operand_str)) {
         float first_operand = float(first_operand_str.toFloat());
         float second_operand = float(second_operand_str.toFloat());
+        first_operand_str.replace("-","");
+        second_operand_str.replace("-","");
         // Check the number of significant digits on the operands as under certain conditions unpredicted results can occur that are not catched inside String.toFloat
         // Also check if the numbers are valid
         if (first_operand_str.length() > 6 || second_operand_str.length() > 6) {
