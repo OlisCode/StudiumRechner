@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     // Add a filter to the operands so we can only enter numbers
-    QValidator *operand_validator = new QRegularExpressionValidator(QRegularExpression("^[0-9]*$"));
+    QValidator *operand_validator = new QRegularExpressionValidator(QRegularExpression("^[0-9-][0-9]*$"));
     // Create a timer to automaticly refreshes the serialports listed in the combobox
     serial_refresh_timer = new QTimer(this);
     connect(serial_refresh_timer, &QTimer::timeout, this, &MainWindow::refreshPorts);
@@ -42,6 +42,7 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
 {
     // Check if the event is an operator and then redirect it to the coresponding button
     // if not we just pass it along
+    QLineEdit *lineedit =qobject_cast<QLineEdit *>(object);
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         switch (keyEvent->key()) {
@@ -49,6 +50,9 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
             ui->pushButton_add->click();
             break;
         case Qt::Key_Minus:
+            if(lineedit->cursorPosition()==0){
+                return false;
+            }
             ui->pushButton_subtract->click();
             break;
         case Qt::Key_Asterisk:
