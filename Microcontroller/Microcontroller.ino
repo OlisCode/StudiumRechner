@@ -158,8 +158,8 @@ uint8_t calculate_checksum(String message) {
 }
 
 bool is_full_digit(String tocheck) {
-  bool toreturn = true;
-  for (int i = 0; i < tocheck.length(); i++) {
+  bool toreturn = tocheck[0] == '-' || isDigit(tocheck[0]);
+  for (int i = 1; i < tocheck.length(); i++) {
     toreturn = toreturn & isDigit(tocheck[i]);
   }
   return toreturn;
