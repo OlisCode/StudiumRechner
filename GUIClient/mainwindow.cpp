@@ -74,7 +74,9 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
 
 MainWindow::~MainWindow()
 {
-    // TODO Disconnect from port
+    if(port.portName()!=""){
+        serialdisconnect();
+    }
     delete ui;
 }
 
@@ -139,8 +141,14 @@ void MainWindow::serialdisconnect()
 void MainWindow::on_pushButton_Calculate_clicked()
 {
     // Assemble the task, send it and then disassemble the result
-    // Assemble the task
     ui ->resultlabel->setText(QString("")); // Clear the result in the ui to prevent a false display if the rest fails
+    // Check if the port is actually open
+    if(!port.isOpen()){
+        serialdisconnect();
+        ui->pushButton_Calculate->toolTip();
+        return;
+    }
+    // Assemble the task
     QString message_str="AB"+ui->lineEdit_LeftOperand->text()+"C"+selected_operator+"D"+ui->lineEdit_RightOperand->text()+"E";
     QByteArray message = message_str.toUtf8();
     message.append(QString("X").toUtf8());
