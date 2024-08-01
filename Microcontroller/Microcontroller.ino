@@ -1,3 +1,4 @@
+// Check the architecture to ensure the program runs properly
 #if not defined(__AVR_ATmega328P__)
 #error "This programm has not been designed for this CPU. Please use a board with a compatible CPU"
 #endif
@@ -7,7 +8,7 @@ void setup() {
 }
 
 void loop() {
-  //String incomming_line = readline();
+  // Read the incomming data from the Serial port
   String incomming_line = Serial.readStringUntil('\n');
   int index_ab = incomming_line.indexOf("AB");  // If the fist 2 Characters are BB the package should not be answered
   int index_c = incomming_line.indexOf('C');
@@ -16,8 +17,9 @@ void loop() {
   int index_x = incomming_line.indexOf('X');
   int index_y = incomming_line.indexOf('Y');
   int index_z = incomming_line.indexOf('Z');
-  // Only if every index character is found:
+  // If every index character is found process the message
   if (index_ab >= 0 && index_c >= 0 && index_d >= 0 && index_e >= 0 && index_y >= 0 && index_z >= 0) {
+    // Verify the checksum and also retreive the request id
     String checksum_from_host_str = incomming_line.substring(index_y + 1, index_z);
     uint8_t checksum_calculated = calculate_checksum(incomming_line.substring(index_ab, index_y + 1));
     float result = 0;
@@ -26,6 +28,7 @@ void loop() {
     String requestid = incomming_line.substring(index_x + 1, index_y);
     uint8_t checksum_from_host_uint8 = checksum_from_host_str.toInt();
     if (checksum_from_host_uint8 == checksum_calculated) {
+      // Read the actual task
       String first_operand_str = incomming_line.substring(index_ab + 2, index_c);
       String operator_str = incomming_line.substring(index_c + 1, index_d);
       String second_operand_str = incomming_line.substring(index_d + 1, index_e);
@@ -41,6 +44,7 @@ void loop() {
         } else if (!checkfloat(first_operand) || !checkfloat(second_operand)) {
           resultvalid = "ERR";
         } else {
+          // Everything seems valid. Do the calculation and also try to calculate backwards to catch any error that may have sneaked trough previous checks
           switch (byte(operator_str[0])) {
             case 0x2a:  // *
               result = float(first_operand * second_operand);
@@ -93,6 +97,7 @@ void loop() {
     } else {
       resultvalid = "CHKSUM";
     }
+    // Do some more checks and then return the result using the Serial port
     if (!checkfloat(result)) {
       resultvalid = "ERR";
     }
@@ -109,6 +114,7 @@ void loop() {
 }
 
 bool checkfloat(float number) {
+  // This checks if the provided float is a valid float and also if it could have been rounded to much
   if (isnan(number)) return false;
   if (isinf(number)) return false;
   // check if the number has more than 6 digits. if so we can not be certain if the number is correct or if it is rounded to much
@@ -149,7 +155,7 @@ String readline() {
 }
 
 uint8_t calculate_checksum(String message) {
-  //TODO quint64 in theory limits string size/length
+  // calculate the checksum using the same method as in the PC program
   uint8_t toreturn = 0;
   for (int i = 0; i < message.length(); i++) {
     toreturn += byte(message[i]);
@@ -158,6 +164,7 @@ uint8_t calculate_checksum(String message) {
 }
 
 bool is_full_digit(String tocheck) {
+  // check a string if it is made up only by numbers and possibly a leading minus 
   bool toreturn = tocheck[0] == '-' || isDigit(tocheck[0]);
   for (int i = 1; i < tocheck.length(); i++) {
     toreturn = toreturn & isDigit(tocheck[i]);
